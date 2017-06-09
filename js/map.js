@@ -14,7 +14,7 @@ function showPage() {
 // leaflet stuff
 var map = L.map('map', {
           center: [46.11022, 0.06181],
-          zoom: 10
+          zoom: 5
         });
 
 mapLink = '<a href="http://www.esri.com/">Esri</a>';
@@ -36,8 +36,8 @@ var circle = L.circle([51.508, -0.11], {
 }).addTo(map);
 
 
-var marker = L.marker([46.1129, 0.06862]).addTo(map);
-marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+// var marker = L.marker([46.1129, 0.06862]).addTo(map);
+// marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
 circle.bindPopup("I am a circle.");
 
 
