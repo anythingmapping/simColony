@@ -1,6 +1,6 @@
 // leaflet stuff
 var map = L.map('map', {
-          center: [46.11022, 0.06181],
+          center: [46.117851998504946, 0.05619227886199952],
           zoom: 17
         });
 
