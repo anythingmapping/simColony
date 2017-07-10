@@ -47,9 +47,16 @@ var LeafIcon = L.Icon.extend({
     }
 });
 
-var icnGreen = new LeafIcon({iconUrl: 'img/mkrRed.png'}),
-    icnRed = new LeafIcon({iconUrl: 'img/mkrGreen.png'}),
+var icnGreen = new LeafIcon({iconUrl: 'img/mkrGreen.png'}),
+    icnRed = new LeafIcon({iconUrl: 'img/mkrRed.png'}),
     icnBlack = new LeafIcon({iconUrl: 'img/mkrBlack.png'});
+
+//  ************** EXTERNAL GAME WORKINGS? **************
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+};
+
+
 
 
 // var icnGreen = L.icon({
@@ -75,17 +82,32 @@ var icnGreen = new LeafIcon({iconUrl: 'img/mkrRed.png'}),
 // });
 
 
+// *************** SIMULATION STARTING SETUP ************
+var ctrlStartRed;
+var ctrlGreenStart;
+var ctrlFoodStart;
 
-var mkrRed = L.marker([46.109864097197146, 0.06161570549011289], {icon: icnRed}).addTo(map);
+var ctrlStartRed_latlng = L.latLng(46.117851998504946, 0.05619227886199952);
+var ctrlStartRed_num = 5
+var redTeam;
+redTeam = [];
 
+for(i=0; i < 10; i++){
+  var mkrRed = L.marker(ctrlStartRed_latlng, {icon: icnRed}).addTo(map);
+  console.log(mkrRed);
+  var id = "Red";
+  var unique = id + i;
+  var unique = mkrRed;
+  console.log(mkrRed);
+  redTeam.push(mkrRed);
+};
+
+var mkrRed = L.marker(ctrlStartRed_latlng, {icon: icnRed}).addTo(map);
 var mkrGreen = L.marker([46.109864097197146, 0.06161570549011231], {icon: icnGreen}).addTo(map);
-
 var mkrFood = L.marker([46.11274627144683, 0.06698548793792726], {icon: icnBlack}).addTo(map);
 var mkrGreenLoc = mkrGreen.getLatLng();
+// *************** SIMULATION STARTING SETUP ************
 
-function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
-};
 
 function greenteam() {
   // console.log(mkrGreenLoc["lng"]);
