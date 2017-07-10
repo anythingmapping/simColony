@@ -4,27 +4,20 @@
 	  <meta charset="utf-8">
 	  <title>Sim Colony</title>
 
-	  <!-- Load Leaflet from CDN-->
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
-   integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
-   crossorigin=""/>
-
-	 <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
-	integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
-	crossorigin=""></script>
+		<link rel="stylesheet" href="./src/leaflet/leaflet.css"/>
+		<script src="./src/leaflet/leaflet.js"></script>
+		<script src="./src/jquery-3.2.1.min.js"></script>
 
 	  <!-- Load Esri Leaflet from CDN -->
 	  <script src="https://unpkg.com/esri-leaflet@2.0.4/dist/esri-leaflet.js"></script>
 
-
 		<!-- game style -->
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/map_style.css" />
 </head>
 
 <body>
-		<div id="loader"></div>
-    <div id="map"></div>
 
+    <div id="map"></div>
 		<!-- Load Esri Leaflet from CDN -->
 		<script src="js/map.js"></script>
 		<script src="js/asset.js"></script>

@@ -2,8 +2,6 @@
 // extent the icon class
 
 
-
-
 //dimensions of the rectangle
 var assetX = 46.1129
 var assetY = -11.29
@@ -30,19 +28,50 @@ var shipIcon = L.icon({
 });
 
 var ship = L.marker([assetX, assetY], {icon: shipIcon}).addTo(map);
-var marker = L.marker([assetX, assetY]).addTo(map);
 
 
-  // //grab the canvas and context
-  // var mapArea = document.getElementById("map");
-  //
+var mkrGreen;
+var mrkFood;
+
+var mkrGreen = L.marker([46.109864097197146, 0.06161570549011231]).addTo(map);
+var mkrFood = L.marker([46.11274627144683, 0.06698548793792726]).addTo(map);
+var mkrGreenLoc = mkrGreen.getLatLng();
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+};
+
+function greenteam() {
+  console.log(mkrGreenLoc["lng"]);
+  // console.log(loc.distanceTo(ship.getLatLng())/1000 + " km to boat");
+  // console.log(mkrGreen.getLatLng["lat"]);
+  // console.log(getRandomArbitrary(mkrGreen.getLatLng["lat"], mkrGreen.getLatLng["lat"]));
+};
+
+function redteam() {
+  // var loc = marker.getLatLng();
+  // console.log(loc.distanceTo(ship.getLatLng())/1000 + " km to boat");
+};
 
 
+
+map.on('click', function(e) {
+  console.log(e.latlng)
+});
+
+
+
+
+
+
+
+
+
+// game loop
 var canvas = document.getElementById('map');
-window.onload = init;
+window.onload = initPhysicsLoop;
 
-function init() {
-  console.log("init")
+function initPhysicsLoop() {
+  console.log("init the physicals game loop")
   animFrame();
 };
 
@@ -54,27 +83,7 @@ function animFrame(){
 function onEachStep(){
   next_assetY = next_assetY +0.01;
   ship.setLatLng([next_assetX,next_assetY]);
-  console.log(next_assetY);
+  greenteam();
+  redteam();
+  // console.log(next_assetY);
 };
-
-
-
-  //
-  // //show it on the screen
-  // var draw = function() {
-  //   ctx.clearRect(0,0,500,300);
-  //   ctx.fillStyle = "rgb(200, 0, 100)";
-  //   ctx.fillRect(x, y, w, h);
-  // };
-  //
-  // //gets executed multiple times per second
-  // var step = function() {
-  //
-  //   update();
-  //   draw();
-  //
-  //   window.requestAnimationFrame(step);
-  // };
-  //
-  // //initial kick
-  // step();
