@@ -59,29 +59,6 @@ function getRandomArbitrary(min, max) {
 
 
 
-// var icnGreen = L.icon({
-//     iconUrl: 'img/mkrGreen.png',
-//     // shadowUrl: 'img/mkrShadow.png',
-//
-//     iconSize:     [50, 82], // size of the icon
-//     // shadowSize:   [41, 41], // size of the shadow
-//     iconAnchor:   [0, 0], // point of the icon which will correspond to marker's location
-//     // shadowAnchor: [20, 0],  // the same for the shadow
-//     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-// });
-//
-// var icnRed = L.icon({
-//     iconUrl: 'img/mkrRed.png',
-//     shadowUrl: 'img/mkrShadow.png',
-//
-//     iconSize:     [25, 41], // size of the icon
-//     // shadowSize:   [41, 41], // size of the shadow
-//     iconAnchor:   [25, 41], // point of the icon which will correspond to marker's location
-//     // shadowAnchor: [20, 0],  // the same for the shadow
-//     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-// });
-
-
 // *************** SIMULATION STARTING SETUP ************
 var ctrlStartRed;
 var ctrlGreenStart;
