@@ -97,6 +97,8 @@ function greenteam() {
   // var mkrGreenLatX = 46.109864097197146;
   var mkrGreenLngY = 0.06161570549011231;
   mkrGreen.setLatLng([mkrGreenLatX, mkrGreenLngY]);
+  console.log(mkrGreen.getLatLng);
+  // console.log(mkrGreen.lat);
 };
 
 function redteam() {
