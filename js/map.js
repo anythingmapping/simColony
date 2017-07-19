@@ -1,7 +1,7 @@
 // leaflet stuff
 var map = L.map('map', {
           center: [46.117851998504946, 0.05619227886199952],
-          zoom: 17
+          zoom: 12
         });
 
 mapLink = '<a href="http://www.esri.com/">Esri</a>';

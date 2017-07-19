@@ -13,8 +13,8 @@ var mkrGreenLngY;
 var assetX = 46.1129
 var assetY = -11.29
 
-var next_assetX = 0
-var next_assetY = 0
+var next_assetX = 46.117851998504946
+var next_assetY = 0.05619227886199952
 
 // var lat = (e.latlng.lat);
 // var lng = (e.latlng.lng);
@@ -155,7 +155,7 @@ function animFrame(){
 };
 
 function onEachStep(){
-  next_assetY = next_assetY +0.01;
+  next_assetY = next_assetY +0.0001;
   ship.setLatLng([next_assetX,next_assetY]);
   greenteam();
   redteam();
