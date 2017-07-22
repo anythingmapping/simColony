@@ -24,7 +24,7 @@ function getRndLatLngTarget(x, y){
     };
   x = Number(strX);
   y = Number(strX);
-  return x,y;
+  return [x,y];
 };
 
 

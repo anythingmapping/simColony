@@ -132,9 +132,9 @@ var Food = function(){
 // ************* SIMULATION AGENT OBJECTS ***************
 var Ant = function(type) {
     this.name = "ant",
-    this.hasVectorTarget = 0,
+    this.hasVectorTarget = false,
     this.VectorTarget = null;
-
+    this.path = [];
     this.food = 0,
     this.mkr = L.marker([46.109864097197146, 0.06161570549011231],
        {icon: icnGreen, draggable: true})
@@ -148,39 +148,40 @@ var Ant = function(type) {
       //CALL FOR A TARGET USING FOOD FOR NOW
       var targetNodeLat = ctrlFood.mkr._latlng.lat;
       var targetNodeLng = ctrlFood.mkr._latlng.lng;
+      // var targetNodeLat = null;
+      // var targetNodeLng = null;
 
 
 
       //GENERATE A VECTOR TO TARGET
+      if (this.hasVectorTarget === false) {
+        console.log('false');
+        // targetNodes = getRndLatLngTarget(currentLat, currentLng);
+        // var targetNodeLat = targetNodes[1];
+        // var targetNodeLng = targetNodes[0];
+        targetMarker2 = L.marker([targetNodeLat,targetNodeLng]).addTo(map);
+        this.hasVectorTarget = true;
 
-      console.log("gothere");
-      targetNodeLat, targetNodeLng = getRndLatLngTarget(currentLat, currentLng);
-      console.log(targetNodeLat,targetNodeLng);
-      test = L.marker([targetNodeLat,targetNodeLng]).addTo(map);
-      this.hasVectorTarget = 1;
+      } else {
 
-      //MARCH
-      if (currentLat-targetNodeLat <= 0.0001){
-        // console.log('below');
-        currentLat = currentLat + 0.00001;
-      }else if (currentLat - targetNodeLat >= 0.0001) {
-        currentLat = currentLat - 0.00001;
-        // console.log('above');
-      };
+        //MARCH
+        if (currentLat-targetNodeLat <= 0.0001){
+          // console.log('below');
+          currentLat = currentLat + 0.00001;
+        }else if (currentLat - targetNodeLat >= 0.0001) {
+          currentLat = currentLat - 0.00001;
+          // console.log('above');
+        };
 
-      if (currentLng-targetNodeLng <= 0.0001){
-        currentLng = currentLng + 0.00001;
-      }else if (currentLng - targetNodeLng >= 0.0001) {
-        currentLng = currentLng - 0.00001;
-      };
-
-
-
-
-
+        if (currentLng-targetNodeLng <= 0.0001){
+          currentLng = currentLng + 0.00001;
+        }else if (currentLng - targetNodeLng >= 0.0001) {
+          currentLng = currentLng - 0.00001;
+        };
+      }
 
       // DISTANCE TO VECTOR TARGET
-      // console.log(currentLat-targetNodeLat);
+      console.log(currentLat-targetNodeLat);
 
 
 
@@ -205,7 +206,7 @@ var Ant = function(type) {
           currentLat = currentLat + 0.0000;
           currentLng = currentLng - 0.00001;
         };
-      antGreen.mkr.setLatLng([currentLat,currentLng]);
+      antGreen.mkr.setLatLng([46.109864097197146, 0.06161570549011231]);
     },
 
     this.foodCheck = function(){
@@ -256,7 +257,7 @@ var ctrlFood = new Food(ctrlFood);
 
 // ****************** UPDATING CALL FROM SIM LOOP***********************//
 // this will have ctrl for food etc
-function updateSim(marker) {
+function updateSim() {
   antGreen.marchOnVector();
   antGreen.foodCheck();
   ctrlFood.foodStatus();
@@ -289,18 +290,17 @@ window.onload = initPhysicsLoop;
 
 function initPhysicsLoop() {
   console.log("init the physicals game loop")
+  //CALL SETUP FUNCTIONS HERE
   animFrame();
 };
 
+// FRAMES PER SECOND REMAIN HIGH FOR TESTING
 function animFrame(){
-  requestAnimationFrame(animFrame, mapdiv);
-  onEachStep();
+  setTimeout(function(){
+    requestAnimationFrame(animFrame, mapdiv);
+    updateSim();
+  }, 1000/60);
 };
-
-function onEachStep(){
-  updateSim(antGreen);
-};
-
 
 
 
