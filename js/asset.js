@@ -5,9 +5,7 @@ var mkrGreenLatX;
 var mkrGreenLngY;
 
 
-
-// todo
-// extent the icon class
+// **************** old working ship ******************//
 
 //dimensions of the rectangle
 var assetX = 46.1129
@@ -18,7 +16,7 @@ var next_assetY = 0.05619227886199952
 
 // var lat = (e.latlng.lat);
 // var lng = (e.latlng.lng);
-var newLatLng = new L.LatLng(0, 0);
+// var newLatLng = new L.LatLng(0, 0);
 // marker.setLatLng(newLatLng);
 
 //speed at which it moves
@@ -33,8 +31,17 @@ var shipIcon = L.icon({
     shadowAnchor: [4, 62],  // the same for the shadow
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
-
+// making the ship
 var ship = L.marker([assetX, assetY], {icon: shipIcon}).addTo(map);
+
+
+
+
+
+
+
+
+
 
 // ********************* MARKER SETUP *******************
 var LeafIcon = L.Icon.extend({
@@ -60,75 +67,173 @@ function getRandomArbitrary(min, max) {
 
 
 // *************** SIMULATION STARTING SETUP ************
-var ctrlStartRed;
-var ctrlGreenStart;
-var ctrlFoodStart;
+// var ctrlStartRed;
+// var ctrlGreenStart;
 
-var ctrlStartRed_latlng = L.latLng(46.117851998504946, 0.05619227886199952);
-var ctrlStartRed_num = 5
-var redTeam;
-redTeam = [];
+//
+// var ctrlStartRed_latlng = L.latLng(46.117851998504946, 0.05619227886199952);
+// var ctrlStartRed_num = 5
+// var redTeam;
+// redTeam = [];
 
-for(i=0; i < 10; i++){
-  var mkrRed = L.marker(ctrlStartRed_latlng, {icon: icnRed}).addTo(map);
-  // console.log(mkrRed);
-  var id = "Red";
-  var unique = id + i;
-  var unique = mkrRed;
-  // console.log(mkrRed);
-  redTeam.push(mkrRed);
+// for(i=0; i < 10; i++){
+//   var mkrRed = L.marker(ctrlStartRed_latlng, {icon: icnRed}).addTo(map);
+//   // console.log(mkrRed);
+//   var id = "Red";
+//   var unique = id + i;
+//   var unique = mkrRed;
+//   // console.log(mkrRed);
+//   redTeam.push(mkrRed);
+// };
+
+// var mkrRed = L.marker(ctrlStartRed_latlng, {icon: icnRed, draggable:true}).addTo(map);
+
+//
+
+
+// ************* SIMULATION FOOD OBJECT *************** //
+var Food = function(){
+  this.name = 'food',
+  this.version = 3,
+  this.food = 100,
+  this.startlocation = [46.11274627144683, 0.06698548793792726];
+  this.mkr = L.circle(this.startlocation,
+     {draggable:true,
+     radius: this.food,
+     opacity: 1,
+     color: '#FF0000',
+   })
+     .addTo(map)
+     .bindPopup(this.name)
+
+  this.foodStatus = function(){
+    if (this.food <= 0){
+      this.version--;
+      this.food = 100;
+      if (this.version >= 0){
+        this.mkr.setLatLng(startlocations[this.version]);
+        this.mkr.setRadius(this.food);
+      } else{
+        //SIM OVER
+        this.mkr.remove();
+      }
+
+    }
+  };
+
+
 };
 
-var mkrRed = L.marker(ctrlStartRed_latlng, {icon: icnRed}).addTo(map);
-var mkrGreen = L.marker([46.109864097197146, 0.06161570549011231], {icon: icnGreen}).addTo(map);
-var mkrFood = L.marker([46.11274627144683, 0.06698548793792726], {icon: icnBlack}).addTo(map);
-var mkrGreenLoc = mkrGreen.getLatLng();
-console.log(mkrGreenLoc["lat"],mkrGreenLoc["lng"]);
-console.log(mkrGreenLoc["lat"]+0.001,mkrGreenLoc["lng"]);
+
+
+// ************* SIMULATION AGENT OBJECTS ***************
+var Ant = function(type) {
+    this.name = "ant",
+    this.food = 0,
+    this.mkr = L.marker([46.109864097197146, 0.06161570549011231],
+       {icon: icnGreen, draggable: true})
+       .addTo(map)
+       .bindPopup(this.name);
+      //  .openPopup();
+
+    this.march = function(){
+      var currentLat = antGreen.mkr._latlng.lat;
+      var currentLng = antGreen.mkr._latlng.lng;
+      var choice = getRndInteger(0,4);
+      // var choice = monteCarlo();
+      if (choice === 0) {
+          currentLat = currentLat + 0.00001;
+          currentLng = currentLng + 0.00000;
+        } else if (choice === 1) {
+          currentLat = currentLat - 0.00001;
+          currentLng = currentLng + 0.00000;
+        } else if (choice === 2) {
+          currentLat = currentLat + 0.0000;
+          currentLng = currentLng + 0.00001;
+        } else {
+          currentLat = currentLat + 0.0000;
+          currentLng = currentLng - 0.00001;
+        };
+      antGreen.mkr.setLatLng([currentLat,currentLng]);
+    },
+
+    this.foodCheck = function(){
+      var foodTarget = this.mkr._latlng.distanceTo(ctrlFood.mkr._latlng);
+      if (foodTarget < 100) {
+        // console.log("helloworld");
+        this.food++;
+        ctrlFood.food--;
+        ctrlFood.mkr.setRadius(ctrlFood.food);
+        console.log(ctrlFood.food);
+      }else{
+        // console.log(this.mkr._latlng.distanceTo(ctrlFood.mkr._latlng));
+      }
+    };
+
+
+};
+
+
+// ************* AGENT INSTANCIATION ***************
+var antGreen = new Ant(icnGreen);
+var ctrlFood = new Food(ctrlFood);
+
+
+
+// ************* PLOT SUCCESSFUL ROUTE ***************************//
+
+
+
+//  working but without inheritance understanding
+// i want this to go into the above func
+//
+// var mkrGreen = L.marker([46.109864097197146, 0.06161570549011231], {icon: icnGreen, draggable: true}).addTo(map);
+// console.log(mkrGreen);
+
+
+
 // *************** SIMULATION STARTING SETUP ************
+// create a red polyline from an array of LatLng points
+// PATH
+// var polylist = [
+//     [45.51, -122.68],
+//     [37.77, -122.43],
+//     [34.04, -118.2]
+// ];
+// var polyline = L.polyline(polylist, {color: 'red'}).addTo(map);
 
 
-function greenteam(marker) {
-  // console.log(marker);
-  var coordTarget = marker.getLatLng();
-  var coord = L.latLng([46.11274627144683, 0.06698548793792726]);
-  // do something to the coords and turn it back into a lnglat
-  mkrGreen.setLatLng(coord);
-  // mkrGreen.setLatLng(mkrGreenLoc["lng"], mkrGreenLoc["lng"]);
-  // console.log(mkrGreen);
-  // console.log(mkrGreenLoc["lng"]+.001);
-  // console.log(loc.distanceTo(ship.getLatLng())/1000 + " km to boat");
-  // console.log(mkrGreen.getLatLng["lat"]);
+// ****************** UPDATING CALL FROM SIM LOOP***********************//
+// this will have ctrl for food etc
+function updateSim(marker) {
+  antGreen.march();
+  antGreen.foodCheck();
+  ctrlFood.foodStatus();
 
-  // var mkrGreenLatX = getRandomArbitrary(mkrGreenLoc["lng"], mkrGreenLoc["lng"]);
-  // var mkrGreenLatX = 46.109864097197146;
-  // var mkrGreenLngY = 0.06161570549011231;
-  // mkrGreen.setLatLng([mkrGreenLatX, mkrGreenLngY]);
-  // console.log(mkrGreen.getLatLng);
-  // console.log(mkrGreen.lat);
-};
 
-function redteam() {
-  // var loc = marker.getLatLng();
-  // console.log(loc.distanceTo(ship.getLatLng())/1000 + " km to boat");
 };
 
 
 
+// ****************** MAP CONTOLS FOR USER INTERACTIONS***********************//
 map.on('click', function(e) {
   console.log(e.latlng)
 });
 
+antGreen.mkr.on("dragend", function(){
+    antGreen.mkr.setTooltipContent("we're moving");
+});
+
+// mkrRed.on("dragend", function(){
+//     mkrRed.setTooltipContent("we're moving");
+// });
 
 
 
 
 
-
-
-
-// game loop
-var canvas = document.getElementById('map');
+// ****************** GAME LOOP CTRL ************************* //
+var mapdiv = document.getElementById('map');
 window.onload = initPhysicsLoop;
 
 function initPhysicsLoop() {
@@ -137,14 +242,22 @@ function initPhysicsLoop() {
 };
 
 function animFrame(){
-  requestAnimationFrame(animFrame, canvas);
+  requestAnimationFrame(animFrame, mapdiv);
   onEachStep();
 };
 
 function onEachStep(){
-  next_assetY = next_assetY +0.0001;
-  ship.setLatLng([next_assetX,next_assetY]);
-  greenteam(mkrGreen);
-  redteam();
-  // console.log(next_assetY);
+  updateSim(antGreen);
 };
+
+
+
+
+//old
+// Windows.oldfunction onEachStep(){
+//   next_assetY = next_assetY +0.0001;
+//   ship.setLatLng([next_assetX,next_assetY]);
+//   greenteam(antGreen);
+//   redteam();
+  // console.log(next_assetY);
+// };
