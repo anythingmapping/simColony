@@ -5,6 +5,8 @@ var mkrGreenLatX;
 var mkrGreenLngY;
 
 
+
+
 // **************** old working ship ******************//
 
 //dimensions of the rectangle
@@ -39,6 +41,12 @@ var ship = L.marker([assetX, assetY], {icon: shipIcon}).addTo(map);
 
 
 
+//  ************** HARD CODED VALUES **************
+startlocations = [
+  [46.109864097197146, 0.06161570549011231],
+  [46.1132445933891, 0.05469560623168945],
+  [46.109864097197146, 0.06161570549011231]]
+
 
 
 
@@ -58,10 +66,6 @@ var icnGreen = new LeafIcon({iconUrl: 'img/mkrGreen.png'}),
     icnRed = new LeafIcon({iconUrl: 'img/mkrRed.png'}),
     icnBlack = new LeafIcon({iconUrl: 'img/mkrBlack.png'});
 
-//  ************** EXTERNAL GAME WORKINGS? **************
-function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
-};
 
 
 
@@ -102,8 +106,7 @@ var Food = function(){
      radius: this.food,
      opacity: 1,
      color: '#FF0000',
-   })
-     .addTo(map)
+   }).addTo(map)
      .bindPopup(this.name)
 
   this.foodStatus = function(){
@@ -129,12 +132,60 @@ var Food = function(){
 // ************* SIMULATION AGENT OBJECTS ***************
 var Ant = function(type) {
     this.name = "ant",
+    this.hasVectorTarget = 0,
+    this.VectorTarget = null;
+
     this.food = 0,
     this.mkr = L.marker([46.109864097197146, 0.06161570549011231],
        {icon: icnGreen, draggable: true})
        .addTo(map)
        .bindPopup(this.name);
-      //  .openPopup();
+
+    this.marchOnVector = function(){
+      //GET CURRENT LOCATION
+      var currentLat = antGreen.mkr._latlng.lat;
+      var currentLng = antGreen.mkr._latlng.lng;
+      //CALL FOR A TARGET USING FOOD FOR NOW
+      var targetNodeLat = ctrlFood.mkr._latlng.lat;
+      var targetNodeLng = ctrlFood.mkr._latlng.lng;
+
+
+
+      //GENERATE A VECTOR TO TARGET
+
+      console.log("gothere");
+      targetNodeLat, targetNodeLng = getRndLatLngTarget(currentLat, currentLng);
+      console.log(targetNodeLat,targetNodeLng);
+      test = L.marker([targetNodeLat,targetNodeLng]).addTo(map);
+      this.hasVectorTarget = 1;
+
+      //MARCH
+      if (currentLat-targetNodeLat <= 0.0001){
+        // console.log('below');
+        currentLat = currentLat + 0.00001;
+      }else if (currentLat - targetNodeLat >= 0.0001) {
+        currentLat = currentLat - 0.00001;
+        // console.log('above');
+      };
+
+      if (currentLng-targetNodeLng <= 0.0001){
+        currentLng = currentLng + 0.00001;
+      }else if (currentLng - targetNodeLng >= 0.0001) {
+        currentLng = currentLng - 0.00001;
+      };
+
+
+
+
+
+
+      // DISTANCE TO VECTOR TARGET
+      // console.log(currentLat-targetNodeLat);
+
+
+
+      antGreen.mkr.setLatLng([currentLat,currentLng]);
+    },
 
     this.march = function(){
       var currentLat = antGreen.mkr._latlng.lat;
@@ -206,7 +257,7 @@ var ctrlFood = new Food(ctrlFood);
 // ****************** UPDATING CALL FROM SIM LOOP***********************//
 // this will have ctrl for food etc
 function updateSim(marker) {
-  antGreen.march();
+  antGreen.marchOnVector();
   antGreen.foodCheck();
   ctrlFood.foodStatus();
 

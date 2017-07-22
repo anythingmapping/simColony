@@ -4,15 +4,36 @@ function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;
 };
 
+function getRndLatLngTarget(x, y){
+  var strY = y.toString();
+  var strX = x.toString();
+
+  strY = strY.slice(0, -3);
+  strX = strX.slice(0, -3);
+
+
+  var choice = getRndInteger(0,4);
+  if (choice === 0) {
+        strX = strX + 1;
+    } else if (choice === 1) {
+        strX = strX - 1;
+    } else if (choice === 2) {
+        strY = strY + 1;
+    } else {
+        strY = strY - 1;
+    };
+  x = Number(strX);
+  y = Number(strX);
+  return x,y;
+};
+
+
 function getRndLatLng(from, to, fixed) {
     return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
     // .toFixed() returns string, so ' * 1' is a trick to convert to number
-}
+};
 
-startlocations = [
-  [46.109864097197146, 0.06161570549011231],
-  [46.1132445933891, 0.05469560623168945],
-  [46.109864097197146, 0.06161570549011231]]
+
 
 var monteCarlo = function() {
 
