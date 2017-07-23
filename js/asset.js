@@ -51,6 +51,10 @@ startlocations = [
 
 
 
+// **********************OTHER*****************************
+
+
+
 // ********************* MARKER SETUP *******************
 var LeafIcon = L.Icon.extend({
     options: {
@@ -184,9 +188,29 @@ var Ant = function(type) {
       }
 
       // DISTANCE TO VECTOR TARGET
-      console.log(currentLat-targetNodeLat);
+      // console.log(currentLat-targetNodeLat);
+      // console.log(isMarkerInsidePolygon(antGreen.mkr, enviroLayer));
 
 
+      // ************************** BONUS LOGIC ************************
+      // IF NEEDED THEN SET THE POLYGON TO ANOTHER COLOR
+      // working logic for setting up a trail once I get that far
+      // it workds but its a bonus to the sim
+
+      // var latlngs = [[0.057935714721679694, 46.10747270790413],
+      // [0.05911588668823243, 46.113958599065015],
+      // [0.06523132324218751, 46.113467721156525],
+      // [0.06544589996337892, 46.10826117120384]];
+      // var polygon = L.polygon(latlngs, {color: 'red'}).addTo(map);
+      // // console.log(typeof(polygon));
+      // // console.log(enviroLayer._layers);
+      // console.log(polygon.getBounds().contains(antGreen.mkr._latlng));
+      // enviroLayer.setStyle({
+      //             fillColor: "#ff0000",
+      //             fillOpacity: 0.8,
+      //             weight: 0.5
+      //         });
+      //
 
       antGreen.mkr.setLatLng([currentLat,currentLng]);
     },
@@ -210,6 +234,10 @@ var Ant = function(type) {
           currentLng = currentLng - 0.00001;
         };
       antGreen.mkr.setLatLng([46.109864097197146, 0.06161570549011231]);
+
+
+
+
     },
 
     this.foodCheck = function(){
