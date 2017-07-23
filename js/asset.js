@@ -159,7 +159,10 @@ var Ant = function(type) {
         // targetNodes = getRndLatLngTarget(currentLat, currentLng);
         // var targetNodeLat = targetNodes[1];
         // var targetNodeLng = targetNodes[0];
-        targetMarker2 = L.marker([targetNodeLat,targetNodeLng]).addTo(map);
+        targetMarker2 = L.circle([targetNodeLat,targetNodeLng],{
+          radius: 100,
+          opacity: 1,
+          color: '#ADD8E6'}).addTo(map);
         this.hasVectorTarget = true;
 
       } else {
