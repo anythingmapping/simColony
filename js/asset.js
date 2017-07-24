@@ -137,21 +137,24 @@ var Food = function(){
 var Ant = function(type) {
     this.name = "ant",
     this.hasVectorTarget = false,
-    this.VectorTarget = null;
-    this.path = [];
+    this.VectorTarget = null,
+
+    this.path = [],
+    this.pathNumber = 0,
     this.food = 0,
     this.mkr = L.marker([46.109864097197146, 0.06161570549011231],
        {icon: icnGreen, draggable: true})
        .addTo(map)
        .bindPopup(this.name);
+    this.targetVector = this.mkr._latlng,
 
     this.marchOnVector = function(){
-      //GET CURRENT LOCATION
-      var currentLat = antGreen.mkr._latlng.lat;
-      var currentLng = antGreen.mkr._latlng.lng;
+      //GET CURRENT LOCATION not sure any of this is really needed
+      var currentLat = this.mkr._latlng.lat;
+      var currentLng = this.mkr._latlng.lng;
       //CALL FOR A TARGET USING FOOD FOR NOW
-      var targetNodeLat = ctrlFood.mkr._latlng.lat;
-      var targetNodeLng = ctrlFood.mkr._latlng.lng;
+      // var targetNodeLat = ctrlFood.mkr._latlng.lat;
+      // var targetNodeLng = ctrlFood.mkr._latlng.lng;
       // var targetNodeLat = null;
       // var targetNodeLng = null;
 
@@ -159,12 +162,20 @@ var Ant = function(type) {
 
       //GENERATE A VECTOR TO TARGET
       if (this.hasVectorTarget === false) {
-        console.log('false');
+        // console.log('false');
         // targetNodes = getRndLatLngTarget(currentLat, currentLng);
         // var targetNodeLat = targetNodes[1];
         // var targetNodeLng = targetNodes[0];
+
+        var targetNodes = getRndLatLng(this.mkr._latlng.lat, this.mkr._latlng.lng);
+        var targetNodeLng = targetNodes[0];
+        var targetNodeLat = targetNodes[1];
+        this.targetLatLng = L.latLng(targetNodeLat, targetNodeLng);
+        //console.log(targetNodes);
+
+
         targetMarker2 = L.circle([targetNodeLat,targetNodeLng],{
-          radius: 100,
+          radius: 10,
           opacity: 1,
           color: '#ADD8E6'}).addTo(map);
         this.hasVectorTarget = true;
@@ -172,19 +183,27 @@ var Ant = function(type) {
       } else {
 
         //MARCH
-        if (currentLat-targetNodeLat <= 0.0001){
-          // console.log('below');
-          currentLat = currentLat + 0.00001;
-        }else if (currentLat - targetNodeLat >= 0.0001) {
-          currentLat = currentLat - 0.00001;
-          // console.log('above');
-        };
+        // ESTABLISH A VECTOR MARCH!!!!!! now that you've got vector targets
+        // https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations/programming-vectors/a/intro-to-vectors
+        // I believe I want to establish smooth vector movement here.
+        console.log('currnet latlng is:');
+        console.log(this.mkr._latlng);
 
-        if (currentLng-targetNodeLng <= 0.0001){
-          currentLng = currentLng + 0.00001;
-        }else if (currentLng - targetNodeLng >= 0.0001) {
-          currentLng = currentLng - 0.00001;
-        };
+        console.log('current target latlng is:')
+        console.log(this.targetLatLng)
+        // if (currentLat-this.targetLatLng.lat <= 0.000001){
+        //   console.log('below');
+        //   currentLat = this.targetLatLng.lat + 0.000000000000001;
+        // }else if (currentLat - this.targetLatLng.lat >= 0.000001) {
+        //   currentLat = this.targetLatLng.lat - 0.0000000000000000001;
+        //   console.log('above');
+        // };
+
+        // if (currentLng-this.targetLatLng.lng <= 0.000001){
+        //   currentLng = this.targetLatLng.lng + 0.00000000000000000001;
+        // }else if (currentLng - this.targetLatLng.lng >= 0.000001) {
+        //   currentLng = this.targetLatLng.lng - 0.00000000000000000001;
+        // };
       }
 
       // DISTANCE TO VECTOR TARGET
@@ -212,42 +231,42 @@ var Ant = function(type) {
       //         });
       //
 
-      antGreen.mkr.setLatLng([currentLat,currentLng]);
+      this.mkr.setLatLng([currentLat,currentLng]);
     },
 
-    this.march = function(){
-      var currentLat = antGreen.mkr._latlng.lat;
-      var currentLng = antGreen.mkr._latlng.lng;
-      var choice = getRndInteger(0,4);
-      // var choice = monteCarlo();
-      if (choice === 0) {
-          currentLat = currentLat + 0.00001;
-          currentLng = currentLng + 0.00000;
-        } else if (choice === 1) {
-          currentLat = currentLat - 0.00001;
-          currentLng = currentLng + 0.00000;
-        } else if (choice === 2) {
-          currentLat = currentLat + 0.0000;
-          currentLng = currentLng + 0.00001;
-        } else {
-          currentLat = currentLat + 0.0000;
-          currentLng = currentLng - 0.00001;
+    //will become target check and have another food check
+    this.targetVectorCheck = function(){
+      console.log("vectorTargetDistance");
+      var vectorTargetDistance = this.mkr._latlng.distanceTo(this.targetLatLng);
+      console.log(vectorTargetDistance);
+
+
+      if (vectorTargetDistance < 5) {
+        console.log('vectorTargetDistance is < 1')
+        // console.log("helloworld");
+          this.hasVectorTarget = false;
+          //console.log(this.path);
         };
-      antGreen.mkr.setLatLng([46.109864097197146, 0.06161570549011231]);
+    };
 
 
 
-
-    },
-
-    this.foodCheck = function(){
+    //will become target check and have another food check
+    this._foodCheck = function(){
       var foodTarget = this.mkr._latlng.distanceTo(ctrlFood.mkr._latlng);
+
       if (foodTarget < 100) {
         // console.log("helloworld");
         this.food++;
         ctrlFood.food--;
+        if (ctrlFood.food <= 0){
+          this.path.push(this.mkr._latlng, this.pathNumber);
+          this.hasVectorTarget = false;
+          //console.log(this.path);
+
+        }
         ctrlFood.mkr.setRadius(ctrlFood.food);
-        console.log(ctrlFood.food);
+        // console.log(ctrlFood.food);
       }else{
         // console.log(this.mkr._latlng.distanceTo(ctrlFood.mkr._latlng));
       }
@@ -290,7 +309,8 @@ var ctrlFood = new Food(ctrlFood);
 // this will have ctrl for food etc
 function updateSim() {
   antGreen.marchOnVector();
-  antGreen.foodCheck();
+  antGreen.targetVectorCheck();
+  // antGreen.foodCheck();
   ctrlFood.foodStatus();
 
 
@@ -330,7 +350,7 @@ function animFrame(){
   setTimeout(function(){
     requestAnimationFrame(animFrame, mapdiv);
     updateSim();
-  }, 1000/60);
+  }, 1000/1);
 };
 
 

@@ -28,9 +28,23 @@ function getRndLatLngTarget(x, y){
 };
 
 
-function getRndLatLng(from, to, fixed) {
-    return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
-    // .toFixed() returns string, so ' * 1' is a trick to convert to number
+function getRndLatLng(originX, originY) {
+    console.log(originX);
+    var r = 100/111300
+    , y0 = originX
+    , x0 = originY
+    , u = Math.random()
+    , v = Math.random()
+    , w = r * Math.sqrt(u)
+    , t = 2 * Math.PI * v
+    , x = w * Math.cos(t)
+    , y1 = w * Math.sin(t)
+    , x1 = x / Math.cos(y0)
+
+    newY = y0 + y1
+    newX = x0 + x1
+
+    return [newX,newY]
 };
 
 
