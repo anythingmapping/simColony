@@ -135,11 +135,17 @@ var Food = function(){
 
 // ************* SIMULATION AGENT OBJECTS ***************
 var Ant = function(type) {
+    // BASIC VALUES OF THE ANT
     this.name = "ant",
     this.hasVectorTarget = false,
     this.VectorTarget = null,
+    this.vectorTargetDistance = null;
+    this.travelSpeed = 1;
 
+    // PATH
     this.path = [],
+    this.futurePath = [],
+
     this.pathNumber = 0,
     this.food = 0,
     this.mkr = L.marker([46.109864097197146, 0.06161570549011231],
@@ -186,11 +192,18 @@ var Ant = function(type) {
         // ESTABLISH A VECTOR MARCH!!!!!! now that you've got vector targets
         // https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations/programming-vectors/a/intro-to-vectors
         // I believe I want to establish smooth vector movement here.
-        console.log('currnet latlng is:');
-        console.log(this.mkr._latlng);
+        // console.log('currnet latlng is:');
+        // console.log(this.mkr._latlng);
+        //
+        // console.log('current target latlng is:')
+        // console.log(this.targetLatLng)
+        this.futurePath = pathFactor(this.mkr._latlng,
+                                     this.targetLatLng,
+                                     this.vectorTargetDistance,
+                                     this.travelSpeed);
+        console.log(this.futurePath);
 
-        console.log('current target latlng is:')
-        console.log(this.targetLatLng)
+
         // if (currentLat-this.targetLatLng.lat <= 0.000001){
         //   console.log('below');
         //   currentLat = this.targetLatLng.lat + 0.000000000000001;
@@ -236,12 +249,12 @@ var Ant = function(type) {
 
     //will become target check and have another food check
     this.targetVectorCheck = function(){
-      console.log("vectorTargetDistance");
-      var vectorTargetDistance = this.mkr._latlng.distanceTo(this.targetLatLng);
-      console.log(vectorTargetDistance);
+      //console.log("vectorTargetDistance");
+      this.vectorTargetDistance = this.mkr._latlng.distanceTo(this.targetLatLng);
+      //console.log(vectorTargetDistance);
 
 
-      if (vectorTargetDistance < 5) {
+      if (this.vectorTargetDistance < 5) {
         console.log('vectorTargetDistance is < 1')
         // console.log("helloworld");
           this.hasVectorTarget = false;

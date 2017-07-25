@@ -27,7 +27,7 @@ function getRndLatLngTarget(x, y){
   return [x,y];
 };
 
-
+// *********** GENERATING THE TARGETING ***********
 function getRndLatLng(originX, originY) {
     console.log(originX);
     var r = 100/111300
@@ -47,7 +47,21 @@ function getRndLatLng(originX, originY) {
     return [newX,newY]
 };
 
+function pathFactor(originLatLng, targetLatLng, targetDistance, agentTravel){
+  xTot = originLatLng.lat - targetLatLng.lat;
+  yTot = originLatLng.lng - targetLatLng.lng;
+  var updatedDistance = targetDistance - agentTravel;
 
+  while (updatedDistance - agentTravel >= 15){
+    updatedDistance = updatedDistance - agentTravel;
+    console.log(updatedDistance);
+  }
+
+  // console.log(targetDistance, updatedDistance);
+  var calculatedPath = [];
+
+  return [calculatedPath]
+};
 
 var monteCarlo = function() {
 
