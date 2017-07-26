@@ -29,7 +29,7 @@ function getRndLatLngTarget(x, y){
 
 // *********** GENERATING THE TARGETING ***********
 function getRndLatLng(originX, originY) {
-    console.log(originX);
+    console.log('GENERATING A NEW TARGET');
     var r = 100/111300
     , y0 = originX
     , x0 = originY
@@ -47,18 +47,64 @@ function getRndLatLng(originX, originY) {
     return [newX,newY]
 };
 
+function pathFactorCalculations(){
+
+};
+
+
 function pathFactor(originLatLng, targetLatLng, targetDistance, agentTravel){
-  xTot = originLatLng.lat - targetLatLng.lat;
-  yTot = originLatLng.lng - targetLatLng.lng;
+  var calculatedPath = []; //THE VARIABLE TO PUSH BACK
+  var xTot = originLatLng.lat - targetLatLng.lat;
+  var yTot = originLatLng.lng - targetLatLng.lng;
   var updatedDistance = targetDistance - agentTravel;
+  var originLat = originLatLng.lat;
+  var originLng = originLatLng.lng;
+  var agentTravelRelativeLat = null;
+  var agentTravelRelativeLng = null;
+  var newLat = null;
+  var newLng = null;
+
 
   while (updatedDistance - agentTravel >= 15){
     updatedDistance = updatedDistance - agentTravel;
-    console.log(updatedDistance);
+
+    // **************** WHAT IS THE VECTOR TO THE TARGET ********************
+    if (xTot >= 0){
+      console.log('marker is above');
+      agentTravelRelativeLat = 0.00001;
+      // console.log(agentTravelRelativeLat);
+      // console.log(originLatLng.lat);
+      newLat = originLat+agentTravelRelativeLat;
+      originLat = newLat;
+    }else if (xTot <= 0) {
+      console.log('marker is below');
+      agentTravelRelativeLat = 0.00001;
+      // console.log(agentTravelRelativeLat);
+      // console.log(originLatLng.lat);
+      newLat = originLat+agentTravelRelativeLat;
+      originLat = newLat;
+    };
+
+    if (yTot >= 0){
+      agentTravelRelative = 0.00001;
+      newLng = originLng+agentTravelRelativeLng;
+      originLng = newLng;
+    }else if (yTot <= 0) {
+      console.log('marker is below');
+      agentTravelRelativeLng = 0.00001;
+      console.log(agentTravelRelativeLng);
+      console.log(originLatLng.lng);
+      newLng = originLng+agentTravelRelativeLng;
+      originLng = newLng;
+    };
+
+
+    calculatedPath.push([newLat, newLng]); //THIS IS PRETEND PATH FOR THE MOMENT
+    // console.log(updatedDistance);
   }
 
   // console.log(targetDistance, updatedDistance);
-  var calculatedPath = [];
+
 
   return [calculatedPath]
 };

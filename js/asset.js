@@ -140,7 +140,7 @@ var Ant = function(type) {
     this.hasVectorTarget = false,
     this.VectorTarget = null,
     this.vectorTargetDistance = null;
-    this.travelSpeed = 1;
+    this.agentSpeed = 2;
 
     // PATH
     this.path = [],
@@ -168,40 +168,65 @@ var Ant = function(type) {
 
       //GENERATE A VECTOR TO TARGET
       if (this.hasVectorTarget === false) {
-        // console.log('false');
+        // *********** IF THERE IS NOT A VECTOR TARGET **************
+        console.log('HAS A VECTOR TARGET IS false');
         // targetNodes = getRndLatLngTarget(currentLat, currentLng);
         // var targetNodeLat = targetNodes[1];
         // var targetNodeLng = targetNodes[0];
 
+        // ********************* GET A NEW TARGET ***********************
         var targetNodes = getRndLatLng(this.mkr._latlng.lat, this.mkr._latlng.lng);
         var targetNodeLng = targetNodes[0];
         var targetNodeLat = targetNodes[1];
         this.targetLatLng = L.latLng(targetNodeLat, targetNodeLng);
         //console.log(targetNodes);
 
-
+        // ******************* SET A NEW TARGET **************************
         targetMarker2 = L.circle([targetNodeLat,targetNodeLng],{
-          radius: 10,
+          radius: 5,
           opacity: 1,
           color: '#ADD8E6'}).addTo(map);
+
+        // THIS IS HACKERISH WAY TO MAKE THE TARGET
+        antGreen.targetVectorCheck();
+
+        // **************** GENERATE THE TARGET ARRAY PATH FOR MARCH**********
+        this.futurePath = pathFactor(this.mkr._latlng,
+                                     this.targetLatLng,
+                                     this.vectorTargetDistance,
+                                     this.agentSpeed);
+
+        console.log(this.futurePath);
+        console.log(this.futurePath[0].length);
+
         this.hasVectorTarget = true;
 
       } else {
+        // *********** IF THERE IS A VECTOR TARGET **************
+        console.log('HAS A VECTOR TARGET IS TRUE');
+        console.log('& THERE IS AN ARRAY PATH TO FOLLOW');
+        console.log(this.futurePath[0]);
+        console.log(this.futurePath[0].length);
+        console.log(this.futurePath[0][this.futurePath[0].length -1][0]);
 
-        //MARCH
-        // ESTABLISH A VECTOR MARCH!!!!!! now that you've got vector targets
-        // https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations/programming-vectors/a/intro-to-vectors
-        // I believe I want to establish smooth vector movement here.
+
+        // ********* HOPE TOO AND MARCH ***********
+        if (this.futurePath[0].length <= 1){
+          this.hasVectorTarget = false;
+        } else{
+          this.mkr.setLatLng([this.futurePath[0][this.futurePath[0].length -2][0],
+                              this.futurePath[0][this.futurePath[0].length -2][1]]);
+        }
+        this.futurePath[0].pop();
+
         // console.log('currnet latlng is:');
         // console.log(this.mkr._latlng);
         //
         // console.log('current target latlng is:')
         // console.log(this.targetLatLng)
-        this.futurePath = pathFactor(this.mkr._latlng,
-                                     this.targetLatLng,
-                                     this.vectorTargetDistance,
-                                     this.travelSpeed);
-        console.log(this.futurePath);
+
+
+
 
 
         // if (currentLat-this.targetLatLng.lat <= 0.000001){
@@ -244,7 +269,7 @@ var Ant = function(type) {
       //         });
       //
 
-      this.mkr.setLatLng([currentLat,currentLng]);
+
     },
 
     //will become target check and have another food check
@@ -254,8 +279,9 @@ var Ant = function(type) {
       //console.log(vectorTargetDistance);
 
 
-      if (this.vectorTargetDistance < 5) {
+      if (this.vectorTargetDistance < 25) {
         console.log('vectorTargetDistance is < 1')
+        console.log('not targeting the target!');
         // console.log("helloworld");
           this.hasVectorTarget = false;
           //console.log(this.path);
@@ -363,7 +389,7 @@ function animFrame(){
   setTimeout(function(){
     requestAnimationFrame(animFrame, mapdiv);
     updateSim();
-  }, 1000/1);
+  }, 1000/10);
 };
 
 
