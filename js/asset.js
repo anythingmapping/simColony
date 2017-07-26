@@ -139,8 +139,10 @@ var Ant = function(type) {
     this.name = "ant",
     this.hasVectorTarget = false,
     this.VectorTarget = null,
-    this.vectorTargetDistance = null;
-    this.agentSpeed = 2;
+    this.success = false,
+    this.vectorTargetDistance = null,
+    this.agentSpeed = 2,
+    this.polyline = null,
 
     // PATH
     this.path = [],
@@ -149,7 +151,7 @@ var Ant = function(type) {
     this.pathNumber = 0,
     this.food = 0,
     this.mkr = L.marker([46.109864097197146, 0.06161570549011231],
-       {icon: icnGreen, draggable: true})
+       {icon: type, draggable: true})
        .addTo(map)
        .bindPopup(this.name);
     this.targetVector = this.mkr._latlng,
@@ -167,7 +169,7 @@ var Ant = function(type) {
 
 
       //GENERATE A VECTOR TO TARGET
-      if (this.hasVectorTarget === false) {
+      if (this.hasVectorTarget === false && this.success === false) {
         // *********** IF THERE IS NOT A VECTOR TARGET **************
         console.log('HAS A VECTOR TARGET IS false');
         // targetNodes = getRndLatLngTarget(currentLat, currentLng);
@@ -186,38 +188,75 @@ var Ant = function(type) {
           radius: 5,
           opacity: 1,
           color: '#ADD8E6'}).addTo(map);
-
-        // THIS IS HACKERISH WAY TO MAKE THE TARGET
-        antGreen.targetVectorCheck();
-
-        // **************** GENERATE THE TARGET ARRAY PATH FOR MARCH**********
-        this.futurePath = pathFactor(this.mkr._latlng,
-                                     this.targetLatLng,
-                                     this.vectorTargetDistance,
-                                     this.agentSpeed);
-
-        console.log(this.futurePath);
-        console.log(this.futurePath[0].length);
-
         this.hasVectorTarget = true;
 
-      } else {
+
+        //  ***************** CHEAT MARCH TO TARGET ****************
+        this.mkr.setLatLng([targetNodeLat,targetNodeLng]);
+        this.path.push([targetNodeLat,targetNodeLng]);
+        console.log(this.path);
+        // targetMarker2.remove();
+        this.hasVectorTarget = false;
+
+      }else if (this.success === true) {
+        console.log('got here');
+        // console.log([this.path[0][0][0]);
+
+        // this.mkr.setLatLng([this.path[0][this.path[0].length -2][0],
+        //                     this.path[0][this.path[0].length -2][1]]);
+        console.log(this.path[0][this.path[0].length -2][0]);
+        console.log(this.path);
+
+
+        // ************************** BONUS LOGIC ************************
+        // IF NEEDED THEN SET THE POLYGON TO ANOTHER COLOR
+        // working logic for setting up a trail once I get that far
+        // it workds but its a bonus to the sim
+
+
+        var latlngs = this.path;
+        this.polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+        // console.log(typeof(polygon));
+        // console.log(enviroLayer._layers);
+        // console.log(polygon.getBounds().contains(antGreen.mkr._latlng));
+        // enviroLayer.setStyle({
+        //             fillColor: "#ff0000",
+        //             fillOpacity: 0.8,
+        //             weight: 0.5
+        //         });
+
+      }
+        // THIS IS HACKERISH WAY TO MAKE THE TARGET
+      //   antGreen.targetVectorCheck();
+      //
+      //   // **************** GENERATE THE TARGET ARRAY PATH FOR MARCH**********
+      //   this.futurePath = pathFactor(this.mkr._latlng,
+      //                                this.targetLatLng,
+      //                                this.vectorTargetDistance,
+      //                                this.agentSpeed);
+      //
+      //   console.log(this.futurePath);
+      //   console.log(this.futurePath[0].length);
+      //
+      //   this.hasVectorTarget = true;
+      //
+      // } else {
         // *********** IF THERE IS A VECTOR TARGET **************
-        console.log('HAS A VECTOR TARGET IS TRUE');
-        console.log('& THERE IS AN ARRAY PATH TO FOLLOW');
-        console.log(this.futurePath[0]);
-        console.log(this.futurePath[0].length);
-        console.log(this.futurePath[0][this.futurePath[0].length -1][0]);
-
-
-        // ********* HOPE TOO AND MARCH ***********
-        if (this.futurePath[0].length <= 1){
-          this.hasVectorTarget = false;
-        } else{
-          this.mkr.setLatLng([this.futurePath[0][this.futurePath[0].length -2][0],
-                              this.futurePath[0][this.futurePath[0].length -2][1]]);
-        }
-        this.futurePath[0].pop();
+        // console.log('HAS A VECTOR TARGET IS TRUE');
+        // console.log('& THERE IS AN ARRAY PATH TO FOLLOW');
+        // console.log(this.futurePath[0]);
+        // console.log(this.futurePath[0].length);
+        // console.log(this.futurePath[0][this.futurePath[0].length -1][0]);
+        //
+        //
+        // // ********* HOPE TOO AND MARCH ***********
+        // if (this.futurePath[0].length <= 1){
+        //   // this.hasVectorTarget = false;
+        // } else{
+        //   this.mkr.setLatLng([this.futurePath[0][this.futurePath[0].length -2][0],
+        //                       this.futurePath[0][this.futurePath[0].length -2][1]]);
+        // }
+        // this.futurePath[0].pop();
 
         // console.log('currnet latlng is:');
         // console.log(this.mkr._latlng);
@@ -242,7 +281,7 @@ var Ant = function(type) {
         // }else if (currentLng - this.targetLatLng.lng >= 0.000001) {
         //   currentLng = this.targetLatLng.lng - 0.00000000000000000001;
         // };
-      }
+
 
       // DISTANCE TO VECTOR TARGET
       // console.log(currentLat-targetNodeLat);
@@ -279,7 +318,7 @@ var Ant = function(type) {
       //console.log(vectorTargetDistance);
 
 
-      if (this.vectorTargetDistance < 25) {
+      if (this.vectorTargetDistance < 1) {
         console.log('vectorTargetDistance is < 1')
         console.log('not targeting the target!');
         // console.log("helloworld");
@@ -291,13 +330,15 @@ var Ant = function(type) {
 
 
     //will become target check and have another food check
-    this._foodCheck = function(){
+    this.foodCheck = function(){
       var foodTarget = this.mkr._latlng.distanceTo(ctrlFood.mkr._latlng);
 
       if (foodTarget < 100) {
         // console.log("helloworld");
         this.food++;
         ctrlFood.food--;
+        console.log('success!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        this.success = true;
         if (ctrlFood.food <= 0){
           this.path.push(this.mkr._latlng, this.pathNumber);
           this.hasVectorTarget = false;
@@ -317,6 +358,8 @@ var Ant = function(type) {
 
 // ************* AGENT INSTANCIATION ***************
 var antGreen = new Ant(icnGreen);
+var antRed = new Ant(icnRed);
+var antBlack = new Ant(icnBlack);
 var ctrlFood = new Food(ctrlFood);
 
 
@@ -349,7 +392,20 @@ var ctrlFood = new Food(ctrlFood);
 function updateSim() {
   antGreen.marchOnVector();
   antGreen.targetVectorCheck();
-  // antGreen.foodCheck();
+  antGreen.foodCheck();
+
+  antRed.marchOnVector();
+  antRed.targetVectorCheck();
+  antRed.foodCheck();
+
+  antBlack.marchOnVector();
+  antBlack.targetVectorCheck();
+  antBlack.foodCheck();
+
+
+
+
+
   ctrlFood.foodStatus();
 
 
@@ -389,7 +445,7 @@ function animFrame(){
   setTimeout(function(){
     requestAnimationFrame(animFrame, mapdiv);
     updateSim();
-  }, 1000/10);
+  }, 1000/60);
 };
 
 

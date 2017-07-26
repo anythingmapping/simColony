@@ -47,9 +47,6 @@ function getRndLatLng(originX, originY) {
     return [newX,newY]
 };
 
-function pathFactorCalculations(){
-
-};
 
 
 function pathFactor(originLatLng, targetLatLng, targetDistance, agentTravel){
@@ -78,7 +75,7 @@ function pathFactor(originLatLng, targetLatLng, targetDistance, agentTravel){
       originLat = newLat;
     }else if (xTot <= 0) {
       console.log('marker is below');
-      agentTravelRelativeLat = 0.00001;
+      agentTravelRelativeLat = -0.00001;
       // console.log(agentTravelRelativeLat);
       // console.log(originLatLng.lat);
       newLat = originLat+agentTravelRelativeLat;
@@ -91,7 +88,7 @@ function pathFactor(originLatLng, targetLatLng, targetDistance, agentTravel){
       originLng = newLng;
     }else if (yTot <= 0) {
       console.log('marker is below');
-      agentTravelRelativeLng = 0.00001;
+      agentTravelRelativeLng = -0.00001;
       console.log(agentTravelRelativeLng);
       console.log(originLatLng.lng);
       newLng = originLng+agentTravelRelativeLng;
